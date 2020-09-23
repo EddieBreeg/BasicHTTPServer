@@ -1,0 +1,6 @@
+{
+    "port": 1337,
+    "host": "localhost",
+    "static_dirs": ["static"],
+    "media_dirs": ["media"]
+}
