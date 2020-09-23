@@ -1,10 +1,18 @@
-# BasicHTTPServer
+# Dynaweb
+
+Dynaweb is a light framework to help you make a cool dynamic website without driving you crazy with a ton of implementation constraints...
 
 ## Installation
 
+```
+git clone https://github.com/EddieBreeg/Dynaweb.git
+cd Dynaweb
+pip install .
+```
+
 ## Usage
 
-## Requirements
+Available soon...
 
 ## Authors
 
