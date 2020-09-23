@@ -13,7 +13,7 @@ with open('README.md') as rm:
     long_description=rm.read()
 
 setup(
-    name="BasicHTTPServer",
+    name="Dynaweb",
     version="0.0.1",
     license="GPLv3",
     description="A pretty simple HTTP server to help you build a website fast",

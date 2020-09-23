@@ -1,7 +1,9 @@
 from os import sys
 from pathlib import Path
 from os import path, makedirs
-from BasicHTTPServer.Server import *
+from dynawebUtils.Server import Server
+from http.server import HTTPServer
+import json
 
 global workingDir
 workingDir = Path().absolute()
