@@ -1,1 +1,1 @@
-python -m BasicServer run
+python -m dynaweb run

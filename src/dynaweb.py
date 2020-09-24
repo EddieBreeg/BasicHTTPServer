@@ -1,19 +1,21 @@
 from os import sys
 from pathlib import Path
 from os import path, makedirs
-from dynawebUtils.Server import Server
+from utils.Server import Server
 from http.server import HTTPServer
 import json
 
-global workingDir
+# getting the directory the module has been called from
 workingDir = Path().absolute()
 
 if sys.argv[1] == "new":
+    # creation of a new project
     projName = sys.argv[2]
     fullPath = path.join(workingDir, projName)
     if path.exists(fullPath):
         raise FileExistsError("Target location already exists")
     makedirs(fullPath)
+    # generating the default settings
     defaults = """{
     "port": 1337,
     "host": "localhost",
@@ -25,14 +27,22 @@ if sys.argv[1] == "new":
         settingsFile.write(defaults)
 
 elif sys.argv[1] == "run":
-    print(workingDir)
+    # running the server
     try:
-        addr = json.load(open(path.join(workingDir, "settings.json")))
+        settings = json.load(open(path.join(workingDir, "settings.json")))
     except FileNotFoundError:
         print("Not in a project directory, aborting.")
         exit()
 
-    addr = (addr['host'], addr['port'])
+    # defining the address
+    if (l := len(sys.argv)) == 2:
+        addr = (settings['host'], settings['port'])
+    elif l == 3:
+        addr = (sys.argv[2], settings['port'])
+    else:
+        addr = (sys.argv[2], int(sys.argv[3]))
+    
+    # creating the server
     server = HTTPServer(addr, Server)
     print("Server started on {0}:{1}".format(
         addr[0],
