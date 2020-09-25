@@ -17,7 +17,7 @@ def parseURL(request, workingDir):
     Parses the request url to create the appropriate response
     """
     # generating the full target path (fp) and its parent (p)
-    if re.search(r'/\??.*', request.path):
+    if request.path=="/" or request.path.startswith('/?'):
         fp = p = workingDir
         base = ""
     elif request.path=="/500":
@@ -26,7 +26,7 @@ def parseURL(request, workingDir):
     else:
         fp = join(workingDir, request.path[1:].split('?')[0])
         p = dirname(fp)
-        base = basename(p)
+        base = basename(fp)
         print(fp)
     # if the target folder doesn't exist, 404 error
     if not exists(p):

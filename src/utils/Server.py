@@ -2,6 +2,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from .parse import *
 from pathlib import Path
 import traceback
+from cgi import parse_multipart, parse_header
 
 workingDir = Path().absolute()
 
@@ -41,6 +42,7 @@ class Server(BaseHTTPRequestHandler):
     def do_POST(self):
         # retrieve the request by parsing the URL, and transfer it to the correct view
         request = parseURL(self, workingDir)
+        # print(request)
         if request['type'] == 404:
             self.send_response(404)
             self.send_header('content-type', 'text/html')
@@ -48,14 +50,19 @@ class Server(BaseHTTPRequestHandler):
         else:
             # read the content of the request
             length = int(self.headers.get('content-length'))
-            data = parseForm(self.rfile.read(length))
+            ctype, pdict = parse_header(self.headers.get('content-type'))
+            if ctype.startswith('multipart/form-data'):
+                pdict['boundary'] = pdict['boundary'].encode('ascii')
+                data = parse_multipart(self.rfile, pdict)
+            else:
+                data = parseForm(self.rfile.read(length))
             # transfer the request to the correct view
             try:
-                response = request['view']({'data': data, 'method': 'POST'})
                 self.send_response(301)
-                self.send_header("content-type", "text/html")
+                response = request['view']({'data': data, 'method': 'POST'})
                 self.send_header('Location', response)
-            except Exception as exc:
+                self.send_header("content-type", "text/html")
+            except Exception:
                 # if something goes wrong
                 self.send_response(500)
                 self.send_header("content-type", "text/html")
